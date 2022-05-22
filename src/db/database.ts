@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'
 
-const sequelize = new Sequelize(process.env.DB_CONNECTION)
+const sequelize = new Sequelize(process.env.DATABASE_URL)
 
 const connect = (): Promise<boolean> => {
   return new Promise<boolean>((resolve, reject) => {
