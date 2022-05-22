@@ -52,6 +52,8 @@ db.connect()
 const server = new apollo_server_express_1.ApolloServer({
     typeDefs: typeDefs_1.typeDefs,
     resolvers: resolvers_1.resolvers,
+    playground: true,
+    introspection: true,
     context: ({ req }) => __awaiter(void 0, void 0, void 0, function* () {
         const token = req.headers.authorization || '';
         if (token) {

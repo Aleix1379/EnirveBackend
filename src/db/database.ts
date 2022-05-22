@@ -1,11 +1,20 @@
 import { Sequelize } from 'sequelize'
 
+const getSSLConfig = () => {
+  console.info('process.env.NODE_ENV:', process.env.NODE_ENV)
+  if (process.env.NODE_ENV === 'DEV') {
+    return null
+  }
+
+  return {
+    require: true,
+    rejectUnauthorized: false
+  }
+}
+
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
+    ssl: getSSLConfig()
   }
 })
 

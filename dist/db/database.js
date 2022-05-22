@@ -2,7 +2,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connect = exports.sequelize = void 0;
 const sequelize_1 = require("sequelize");
-const sequelize = new sequelize_1.Sequelize(process.env.DATABASE_URL);
+const getSSLConfig = () => {
+    console.info('process.env.NODE_ENV:', process.env.NODE_ENV);
+    if (process.env.NODE_ENV === 'DEV') {
+        return null;
+    }
+    return {
+        require: true,
+        rejectUnauthorized: false
+    };
+};
+const sequelize = new sequelize_1.Sequelize(process.env.DATABASE_URL, {
+    dialectOptions: {
+        ssl: getSSLConfig()
+    }
+});
 exports.sequelize = sequelize;
 const connect = () => {
     return new Promise((resolve, reject) => {
