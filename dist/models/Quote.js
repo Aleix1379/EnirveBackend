@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
-const database_1 = require("../database");
+const database_1 = require("../db/database");
 class Quote extends sequelize_1.Model {
 }
 exports.default = Quote;

@@ -1,49 +1,12 @@
 "use strict";
-/*
-import { v4 as uuid } from 'uuid'
-import Quote from '../models/Quote'
-// Provide resolver functions for your schema fields
-export const resolvers = {
-  Mutation: {
-    addQuote: async (parent: any, ctx: any) => {
-      const id = uuid()
-      const q = await Quote.create({
-        id,
-        phrase: ctx.phrase,
-        quotee: ctx.quotee
-      })
-      return {
-        id: q.getDataValue('id'),
-        phrase: q.getDataValue('phrase'),
-        quotee: q.getDataValue('quotee')
-      }
-    },
-    editQuote: async (parent: any, ctx: any) => {
-      const q = await Quote.update(
-        { phrase: ctx.phrase, quotee: ctx.quotee },
-        { where: { id: ctx.id }, returning: true }
-      )
-      return {
-        id: q[1][0].getDataValue('id'),
-        phrase: q[1][0].getDataValue('phrase'),
-        quotee: q[1][0].getDataValue('quotee')
-      }
-    },
-    deleteQuote: async (parent: any, ctx: any) => {
-      const q = await Quote.destroy({ where: { id: ctx.id } })
-      return { ok: q }
-    }
-  },
-  Query: {
-    quotes: async () => await Quote.findAll({})
-  }
-}
-*/
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
 const quote_1 = require("./quote");
+const user_1 = require("./user");
+const result_1 = require("./result");
+const irregular_verbs_1 = require("./irregular-verbs");
 exports.resolvers = {
-    Query: Object.assign({}, quote_1.QuoteQuery),
-    Mutation: Object.assign({}, quote_1.QuoteMutation)
+    Query: Object.assign(Object.assign(Object.assign(Object.assign({}, quote_1.QuoteQuery), user_1.UserQuery), result_1.ResultQuery), irregular_verbs_1.IrregularVerbQuery),
+    Mutation: Object.assign(Object.assign(Object.assign(Object.assign({}, quote_1.QuoteMutation), user_1.UserMutation), result_1.ResultMutation), irregular_verbs_1.IrregularVerbMutation)
 };
 //# sourceMappingURL=resolvers.js.map

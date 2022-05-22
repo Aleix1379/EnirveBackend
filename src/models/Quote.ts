@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
-import { sequelize } from '../database'
+import { sequelize } from '../db/database'
 export default class Quote extends Model {}
 Quote.init(
   {

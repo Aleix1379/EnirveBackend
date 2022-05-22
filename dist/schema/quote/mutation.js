@@ -16,12 +16,12 @@ exports.QuoteMutation = void 0;
 const uuid_1 = require("uuid");
 const Quote_1 = __importDefault(require("../../models/Quote"));
 exports.QuoteMutation = {
-    addQuote: (parent, ctx) => __awaiter(void 0, void 0, void 0, function* () {
+    addQuote: (root, args) => __awaiter(void 0, void 0, void 0, function* () {
         const id = (0, uuid_1.v4)();
         const q = yield Quote_1.default.create({
             id,
-            phrase: ctx.phrase,
-            quotee: ctx.quotee
+            phrase: args.phrase,
+            quotee: args.quotee
         });
         return {
             id: q.getDataValue('id'),
@@ -29,16 +29,16 @@ exports.QuoteMutation = {
             quotee: q.getDataValue('quotee')
         };
     }),
-    editQuote: (parent, ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const q = yield Quote_1.default.update({ phrase: ctx.phrase, quotee: ctx.quotee }, { where: { id: ctx.id }, returning: true });
+    editQuote: (root, args) => __awaiter(void 0, void 0, void 0, function* () {
+        const q = yield Quote_1.default.update({ phrase: args.phrase, quotee: args.quotee }, { where: { id: args.id }, returning: true });
         return {
             id: q[1][0].getDataValue('id'),
             phrase: q[1][0].getDataValue('phrase'),
             quotee: q[1][0].getDataValue('quotee')
         };
     }),
-    deleteQuote: (parent, ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const q = yield Quote_1.default.destroy({ where: { id: ctx.id } });
+    deleteQuote: (root, args) => __awaiter(void 0, void 0, void 0, function* () {
+        const q = yield Quote_1.default.destroy({ where: { id: args.id } });
         return { ok: q };
     })
 };

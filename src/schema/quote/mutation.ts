@@ -2,12 +2,12 @@ import { v4 as uuid } from 'uuid'
 import Quote from '../../models/Quote'
 
 export const QuoteMutation = {
-  addQuote: async (parent: any, ctx: any) => {
+  addQuote: async (root: any, args: any) => {
     const id = uuid()
     const q = await Quote.create({
       id,
-      phrase: ctx.phrase,
-      quotee: ctx.quotee
+      phrase: args.phrase,
+      quotee: args.quotee
     })
     return {
       id: q.getDataValue('id'),
@@ -15,10 +15,10 @@ export const QuoteMutation = {
       quotee: q.getDataValue('quotee')
     }
   },
-  editQuote: async (parent: any, ctx: any) => {
+  editQuote: async (root: any, args: any) => {
     const q = await Quote.update(
-      { phrase: ctx.phrase, quotee: ctx.quotee },
-      { where: { id: ctx.id }, returning: true }
+      { phrase: args.phrase, quotee: args.quotee },
+      { where: { id: args.id }, returning: true }
     )
     return {
       id: q[1][0].getDataValue('id'),
@@ -26,8 +26,8 @@ export const QuoteMutation = {
       quotee: q[1][0].getDataValue('quotee')
     }
   },
-  deleteQuote: async (parent: any, ctx: any) => {
-    const q = await Quote.destroy({ where: { id: ctx.id } })
+  deleteQuote: async (root: any, args: any) => {
+    const q = await Quote.destroy({ where: { id: args.id } })
     return { ok: q }
   }
 }

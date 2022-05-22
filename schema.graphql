@@ -1,7 +1,63 @@
-query Read {
-    quotes {
-        id
-        phrase
-        quotee
-    }
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type DeleteResponse {
+    ok: Boolean!
+}
+
+type IrregularVerb {
+    id: Int!
+    participle: String!
+    present: String!
+    simple: String!
+}
+
+type Mutation {
+    addQuote(phrase: String!, quotee: String): Quote
+    deleteQuote(id: ID!): DeleteResponse
+    editQuote(id: ID!, phrase: String, quotee: String): Quote
+    login(password: String!, username: String!): SignResponse!
+    registerUser(email: String!, password: String!, username: String!): SignResponse
+}
+
+type Query {
+    irregularVerbs(ids: [Int]): [IrregularVerb]
+    quotes: [Quote]
+    userResults(userId: Int!): [Result]
+}
+
+type Quote {
+    id: ID!
+    phrase: String!
+    quotee: String
+}
+
+type Result {
+    completed: Boolean!
+    id: Int!
+    user: User!
+    verb: Verb!
+}
+
+type SignResponse {
+    jwt: String!
+    user: User!
+}
+
+type User {
+    email: String!
+    id: Int!
+    password: String!
+    username: String!
+}
+
+type Verb {
+    id: Int!
+    participle: String!
+    present: String!
+    simple: String!
 }
