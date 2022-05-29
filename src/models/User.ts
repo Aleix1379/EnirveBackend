@@ -21,7 +21,7 @@ User.init(
     },
     avatar: {
       type: DataTypes.STRING,
-      defaultValue: 'avatar1.png'
+      defaultValue: 'avatar1'
     }
   },
   { sequelize, modelName: 'user' }

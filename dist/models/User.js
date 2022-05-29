@@ -24,7 +24,7 @@ User.init({
     },
     avatar: {
         type: sequelize_1.DataTypes.STRING,
-        defaultValue: 'avatar1.png'
+        defaultValue: 'avatar1'
     }
 }, { sequelize: database_1.sequelize, modelName: 'user' });
 //# sourceMappingURL=User.js.map

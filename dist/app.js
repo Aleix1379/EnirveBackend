@@ -83,7 +83,7 @@ server
     .start()
     .then(() => {
     server.applyMiddleware({ app, cors: corsOptions, path: '/' });
-    app.listen({ port: process.env.SERVER_PORT }, () => console.log(`🚀 Server ready at http://localhost:${process.env.SERVER_PORT}${server.graphqlPath}`));
+    app.listen({ port: process.env.PORT || 4000 }, () => console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`));
 })
     .catch(error => console.error(error));
 //# sourceMappingURL=app.js.map

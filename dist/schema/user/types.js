@@ -14,7 +14,7 @@ exports.UserTypes = `
         user: User!
     }
     type Mutation {
-        login (username: String!, password: String!): SignResponse!
+        login (email: String!, password: String!): SignResponse!
         registerUser (username: String!, email: String!, password: String!): SignResponse
         updateUserAvatar (avatar: String!): User!
     }

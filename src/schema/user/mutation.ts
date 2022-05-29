@@ -7,7 +7,7 @@ import { Verb } from 'verb'
 import { Profile } from 'profile'
 
 interface LoginParams {
-  username: string
+  email: string
   password: string
 }
 
@@ -35,19 +35,23 @@ const saltRounds = 10
 export const UserMutation = {
   login: async (
     root: any,
-    { username, password }: LoginParams
+    { email, password }: LoginParams
   ): Promise<SignResponse> => {
-    const user = await User.findOne({ where: { username } })
+    console.info('email:', email)
+    console.info('password:', password)
+    const user = await User.findOne({ where: { email } })
     if (!user) {
+      console.info('user not found...')
       throw new Error('You have entered an invalid username or password')
     }
     const result = await bcrypt.compare(password, user.getDataValue('password'))
     if (!result) {
+      console.info("password doesn't match")
       throw new Error('You have entered an invalid username or password')
     }
     return {
       user,
-      jwt: jwt.encode({ username }, process.env.JWT_SECRET)
+      jwt: jwt.encode({ email }, process.env.JWT_SECRET)
     }
   },
   registerUser: async (
