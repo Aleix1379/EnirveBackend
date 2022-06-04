@@ -37,8 +37,6 @@ export const UserMutation = {
     root: any,
     { email, password }: LoginParams
   ): Promise<SignResponse> => {
-    console.info('email:', email)
-    console.info('password:', password)
     const user = await User.findOne({ where: { email } })
     if (!user) {
       console.info('user not found...')
@@ -86,13 +84,8 @@ export const UserMutation = {
     ctx: any
   ): Promise<UpdateUserAvatarResponse> => {
     const user: User = await User.findOne({ where: { id: ctx.user.id } })
-    console.info('user connected id:', ctx.user.id)
-
-    // user.avatar = avatar
     user.setDataValue('avatar', avatar)
     await user.save()
-
-    console.info('return user.toJSON():', user.toJSON())
     return user.toJSON()
   }
 }
