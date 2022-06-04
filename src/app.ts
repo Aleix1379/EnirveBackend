@@ -21,13 +21,13 @@ const server = new ApolloServer({
 
     if (token) {
       try {
-        const { username } = jwt.decode(
+        const { email } = jwt.decode(
           token.replace('Bearer ', ''),
           process.env.JWT_SECRET
         )
         const user = await User.findOne({
           where: {
-            username: username
+            email: email
           }
         })
         return { user: user.toJSON() }
