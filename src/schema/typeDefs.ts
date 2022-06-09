@@ -3,6 +3,7 @@ import { QuoteTypes } from './quote'
 import { UserTypes } from './user'
 import { ResultTypes } from './result'
 import { IrregularVerbsTypes } from './irregular-verbs'
+import { ScoreTypes } from './score'
 
 export const typeDefs = gql`
   type Query
@@ -11,4 +12,5 @@ export const typeDefs = gql`
   ${UserTypes}
   ${ResultTypes}
   ${IrregularVerbsTypes}
+  ${ScoreTypes}
 `

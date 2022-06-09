@@ -5,3 +5,4 @@ dist/*
 **/*.d.ts
 # 3rd party libs
 /src/public/
+node_modules
