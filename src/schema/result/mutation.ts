@@ -13,7 +13,7 @@ interface UpdateUserResultsParams {
 export const ResultMutation = {
   updateUserResults: async (
     root: any,
-    { userId, results }: UpdateUserResultsParams
+    { userId, results = [] }: UpdateUserResultsParams
   ) => {
     console.info('updateUserResults | userId:', userId)
     console.info('updateUserResults | results:', results)
