@@ -5,6 +5,12 @@ import { verbs } from '../../db/irregular-verbs'
 import Result from '../../models/Result'
 import { Verb } from 'verb'
 import { Profile } from 'profile'
+import { OAuth2Client } from 'google-auth-library'
+
+const GOOGLE_CLIENT_ID =
+  '21474542388-1mi2ieimerkjhur2uu2a85j36ri67mcn.apps.googleusercontent.com'
+
+const client = new OAuth2Client(GOOGLE_CLIENT_ID)
 
 interface LoginParams {
   email: string
@@ -30,7 +36,32 @@ interface UpdateUserAvatarResponse {
   user: Profile
 }
 
+interface verifyTokenWithGoogleParams {
+  token: string
+}
+
 const saltRounds = 10
+
+const createUSer = async (username: string, email: string, password = '') => {
+  const salt = await bcrypt.genSalt(saltRounds)
+  const hash = await bcrypt.hash(password, salt)
+
+  const user = await User.create({
+    username,
+    email,
+    password: hash
+  })
+
+  verbs.forEach((verb: Verb) => {
+    Result.create({
+      verb_id: verb.id,
+      user_id: user.getDataValue('id'),
+      completed: false
+    })
+  })
+
+  return user
+}
 
 export const UserMutation = {
   login: async (
@@ -38,7 +69,7 @@ export const UserMutation = {
     { email, password }: LoginParams
   ): Promise<SignResponse> => {
     const user = await User.findOne({ where: { email } })
-    if (!user) {
+    if (!user || !password) {
       console.info('user not found...')
       throw new Error('You have entered an invalid username or password')
     }
@@ -56,25 +87,10 @@ export const UserMutation = {
     root: any,
     { username, email, password }: RegisterUserParams
   ): Promise<SignResponse> => {
-    const salt = await bcrypt.genSalt(saltRounds)
-    const hash = await bcrypt.hash(password, salt)
-
-    const user = await User.create({
-      username,
-      email,
-      password: hash
-    })
-
-    verbs.forEach((verb: Verb) => {
-      Result.create({
-        verb_id: verb.id,
-        user_id: user.getDataValue('id'),
-        completed: false
-      })
-    })
+    const userCreated = await createUSer(username, email, password)
 
     return {
-      user,
+      user: userCreated,
       jwt: jwt.encode({ username }, process.env.JWT_SECRET)
     }
   },
@@ -87,5 +103,34 @@ export const UserMutation = {
     user.setDataValue('avatar', avatar)
     await user.save()
     return user.toJSON()
+  },
+  verifyTokenWithGoogle: async (
+    root: any,
+    { token }: verifyTokenWithGoogleParams,
+    ctx: any
+  ): Promise<any> => {
+    console.log('token:', token)
+
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: GOOGLE_CLIENT_ID
+    })
+
+    const payload = ticket.getPayload()
+    console.info(payload)
+    let user = await User.findOne({ where: { email: payload.email } })
+
+    if (!user) {
+      user = await createUSer(payload.name, payload.email, '')
+    }
+
+    const result = {
+      user,
+      jwt: jwt.encode({ email: payload.email }, process.env.JWT_SECRET)
+    }
+
+    console.info('result: ', result)
+
+    return result
   }
 }

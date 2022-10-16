@@ -14,6 +14,7 @@ export const UserTypes = `
         login (email: String!, password: String!): SignResponse!
         registerUser (username: String!, email: String!, password: String!): SignResponse
         updateUserAvatar (avatar: String!): User!
+        verifyTokenWithGoogle (token: String!): SignResponse!
     }
     type Query {
         profile : User!
