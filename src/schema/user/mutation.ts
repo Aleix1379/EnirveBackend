@@ -43,24 +43,28 @@ interface verifyTokenWithGoogleParams {
 const saltRounds = 10
 
 const createUSer = async (username: string, email: string, password = '') => {
-  const salt = await bcrypt.genSalt(saltRounds)
-  const hash = await bcrypt.hash(password, salt)
+  try {
+    const salt = await bcrypt.genSalt(saltRounds)
+    const hash = await bcrypt.hash(password, salt)
 
-  const user = await User.create({
-    username,
-    email,
-    password: hash
-  })
-
-  verbs.forEach((verb: Verb) => {
-    Result.create({
-      verb_id: verb.id,
-      user_id: user.getDataValue('id'),
-      completed: false
+    const user = await User.create({
+      username,
+      email,
+      password: hash
     })
-  })
 
-  return user
+    verbs.forEach((verb: Verb) => {
+      Result.create({
+        verb_id: verb.id,
+        user_id: user.getDataValue('id'),
+        completed: false
+      })
+    })
+
+    return user
+  } catch (error) {
+    console.error('create user:', error)
+  }
 }
 
 export const UserMutation = {
@@ -91,7 +95,7 @@ export const UserMutation = {
 
     return {
       user: userCreated,
-      jwt: jwt.encode({ username }, process.env.JWT_SECRET)
+      jwt: jwt.encode({ email }, process.env.JWT_SECRET)
     }
   },
   updateUserAvatar: async (
