@@ -1,4 +1,5 @@
 import Result from '../../models/Result'
+import User from '../../models/User'
 
 interface VerbResult {
   id: number
@@ -17,9 +18,30 @@ export const ResultMutation = {
   ) => {
     console.info('updateUserResults | userId:', userId)
     console.info('updateUserResults | results:', results)
-    results.forEach(it => {
-      Result.update(it, { where: { id: it.id } })
-    })
+
+    const user: User = await User.findOne({ where: { id: userId } })
+
+    const currentResults = user.getDataValue('results')
+    if (currentResults) {
+      user.setDataValue(
+        'results',
+        currentResults.map(item => {
+          const element = results.find(it => it.verbId === item.verbId)
+          if (!element) {
+            return item
+          }
+          return {
+            ...item,
+            ...element
+          }
+        })
+      )
+      await user.save()
+    } else {
+      results.forEach(it => {
+        Result.update(it, { where: { id: it.id } })
+      })
+    }
     return true
   }
 }

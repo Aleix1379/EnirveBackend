@@ -17,7 +17,7 @@ Score.init(
 )
 
 Score.belongsTo(User, {
-  as: 'userId',
+  as: 'user',
   targetKey: 'id',
   foreignKey: { name: 'user_id' }
 })

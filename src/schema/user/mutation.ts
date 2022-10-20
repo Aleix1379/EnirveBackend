@@ -2,10 +2,10 @@ import User from '../../models/User'
 import jwt from 'jwt-simple'
 import bcrypt from 'bcrypt'
 import { verbs } from '../../db/irregular-verbs'
-import Result from '../../models/Result'
 import { Verb } from 'verb'
 import { Profile } from 'profile'
 import { OAuth2Client } from 'google-auth-library'
+import { VerbResult } from 'results'
 
 const GOOGLE_CLIENT_ID =
   '21474542388-1mi2ieimerkjhur2uu2a85j36ri67mcn.apps.googleusercontent.com'
@@ -47,21 +47,17 @@ const createUSer = async (username: string, email: string, password = '') => {
     const salt = await bcrypt.genSalt(saltRounds)
     const hash = await bcrypt.hash(password, salt)
 
-    const user = await User.create({
+    const results: Array<VerbResult> = verbs.map((verb: Verb) => ({
+      verbId: verb.id,
+      completed: false
+    }))
+
+    return await User.create({
       username,
       email,
-      password: hash
+      password: hash,
+      results
     })
-
-    verbs.forEach((verb: Verb) => {
-      Result.create({
-        verb_id: verb.id,
-        user_id: user.getDataValue('id'),
-        completed: false
-      })
-    })
-
-    return user
   } catch (error) {
     console.error('create user:', error)
   }

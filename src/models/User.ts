@@ -22,6 +22,10 @@ User.init(
     avatar: {
       type: DataTypes.STRING,
       defaultValue: 'avatar1'
+    },
+    results: {
+      type: DataTypes.JSON,
+      defaultValue: []
     }
   },
   { sequelize, modelName: 'user' }

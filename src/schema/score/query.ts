@@ -1,6 +1,16 @@
 import Score from '../../models/Score'
 import { Points } from 'score'
 import dayjs from 'dayjs'
+import User from '../../models/User'
+import { sequelize } from '../../db/database'
+
+const RANKING_DEFAULT_START = 0
+const RANKING_DEFAULT_LIMIT = 50
+
+interface RankingParams {
+  start?: number
+  limit?: number
+}
 
 const getPointsByDates = (values: Array<any>) => {
   const points: Points = {
@@ -43,5 +53,36 @@ export const ScoreQuery = {
       console.info('points:', points)
       return points
     }
+  },
+  ranking: async (root: any, params: RankingParams) => {
+    const start = params.start ?? RANKING_DEFAULT_START
+    const limit = params.limit ?? RANKING_DEFAULT_LIMIT
+
+    const data = await Score.findAll({
+      attributes: [
+        [
+          sequelize.literal(
+            'RANK () OVER (ORDER BY SUM("scores"."points") desc )'
+          ),
+          'position'
+        ],
+        [sequelize.fn('SUM', sequelize.col('scores.points')), 'points'],
+        [sequelize.col('user.username'), 'username'],
+        [sequelize.col('user.avatar'), 'avatar']
+      ],
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+          required: true,
+          as: 'user'
+        }
+      ],
+      offset: start,
+      limit,
+      group: ['user.id', 'user.username']
+    })
+
+    return data.map(it => it.toJSON())
   }
 }
