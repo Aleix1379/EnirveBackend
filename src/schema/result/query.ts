@@ -2,7 +2,7 @@ import Result from '../../models/Result'
 import { sequelize } from '../../db/database'
 import User from '../../models/User'
 import IrregularVerb from '../../models/IrregularVerb'
-import { UserResult } from 'results'
+import { UserResult, UserResultResponse } from 'results'
 
 interface ResultParams {
   userId: number
@@ -15,13 +15,18 @@ export const ResultQuery = {
 
     const data = user.getDataValue('results')
     if (data) {
-      const values: Array<UserResult> = []
+      const values: Array<UserResultResponse> = []
 
       data.forEach((item: UserResult) => {
         const verb = verbs.find(v => v.getDataValue('id') === item.verbId)
         values.push({
           completed: item.completed,
-          verb
+          verb: {
+            id: verb.getDataValue('id'),
+            present: verb.getDataValue('present'),
+            simple: verb.getDataValue('simple'),
+            participle: verb.getDataValue('participle')
+          }
         })
       })
 

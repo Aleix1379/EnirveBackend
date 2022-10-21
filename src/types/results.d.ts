@@ -7,5 +7,8 @@ interface VerbResult {
 export interface UserResult {
   verbId: number
   completed: boolean
+}
+export interface UserResultResponse {
+  completed: boolean
   verb: VerbResult
 }

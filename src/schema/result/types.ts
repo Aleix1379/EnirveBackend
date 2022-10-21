@@ -18,7 +18,6 @@ export const ResultTypes = `
         completed: Boolean!
     }
     input VerbInput {
-        id: Int!
         verbId: Int!
         completed: Boolean!
     }

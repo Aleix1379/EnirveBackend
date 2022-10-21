@@ -5,7 +5,7 @@ import { verbs } from '../../db/irregular-verbs'
 import { Verb } from 'verb'
 import { Profile } from 'profile'
 import { OAuth2Client } from 'google-auth-library'
-import { VerbResult } from 'results'
+import { UserResult, VerbResult } from 'results'
 
 const GOOGLE_CLIENT_ID =
   '21474542388-1mi2ieimerkjhur2uu2a85j36ri67mcn.apps.googleusercontent.com'
@@ -47,7 +47,7 @@ const createUSer = async (username: string, email: string, password = '') => {
     const salt = await bcrypt.genSalt(saltRounds)
     const hash = await bcrypt.hash(password, salt)
 
-    const results: Array<VerbResult> = verbs.map((verb: Verb) => ({
+    const results: Array<UserResult> = verbs.map((verb: Verb) => ({
       verbId: verb.id,
       completed: false
     }))
