@@ -62,7 +62,7 @@ export const ScoreQuery = {
       attributes: [
         [
           sequelize.literal(
-            'RANK () OVER (ORDER BY SUM("scores"."points") desc )'
+            'ROW_NUMBER () OVER (ORDER BY SUM("scores"."points") desc )'
           ),
           'position'
         ],
