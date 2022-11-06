@@ -5,7 +5,7 @@ import { verbs } from '../../db/irregular-verbs'
 import { Verb } from 'verb'
 import { Profile } from 'profile'
 import { OAuth2Client } from 'google-auth-library'
-import { UserResult, VerbResult } from 'results'
+import { UserResult } from 'results'
 
 const GOOGLE_CLIENT_ID =
   '21474542388-1mi2ieimerkjhur2uu2a85j36ri67mcn.apps.googleusercontent.com'
@@ -30,6 +30,11 @@ interface SignResponse {
 
 interface UpdateUserAvatarParams {
   avatar: string
+}
+
+interface UpdateUserParams {
+  username: string
+  email: string
 }
 
 interface UpdateUserAvatarResponse {
@@ -70,12 +75,10 @@ export const UserMutation = {
   ): Promise<SignResponse> => {
     const user = await User.findOne({ where: { email } })
     if (!user || !password) {
-      console.info('user not found...')
       throw new Error('You have entered an invalid username or password')
     }
     const result = await bcrypt.compare(password, user.getDataValue('password'))
     if (!result) {
-      console.info("password doesn't match")
       throw new Error('You have entered an invalid username or password')
     }
     return {
@@ -109,28 +112,32 @@ export const UserMutation = {
     { token }: verifyTokenWithGoogleParams,
     ctx: any
   ): Promise<any> => {
-    console.log('token:', token)
-
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: GOOGLE_CLIENT_ID
     })
 
     const payload = ticket.getPayload()
-    console.info(payload)
     let user = await User.findOne({ where: { email: payload.email } })
 
     if (!user) {
       user = await createUSer(payload.name, payload.email, '')
     }
 
-    const result = {
+    return {
       user,
       jwt: jwt.encode({ email: payload.email }, process.env.JWT_SECRET)
     }
-
-    console.info('result: ', result)
-
-    return result
+  },
+  updateProfile: async (
+    root: any,
+    { username, email }: UpdateUserParams,
+    ctx: any
+  ) => {
+    const user: User = await User.findOne({ where: { id: ctx.user.id } })
+    user.setDataValue('username', username)
+    user.setDataValue('email', email)
+    await user.save()
+    return user.toJSON()
   }
 }

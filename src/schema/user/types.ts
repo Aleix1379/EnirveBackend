@@ -10,13 +10,23 @@ export const UserTypes = `
         jwt: String!
         user: User!
     }
+    input UpdateProfileParams {
+        username: String!
+        email: String!
+    }
     type Mutation {
         login (email: String!, password: String!): SignResponse!
         registerUser (username: String!, email: String!, password: String!): SignResponse
         updateUserAvatar (avatar: String!): User!
         verifyTokenWithGoogle (token: String!): SignResponse!
+        updateProfile ( username: String! email: String!): User!
+    }
+    input FindOneFilter {
+        username: String
+        email: String
     }
     type Query {
         profile : User!
+        findOne (filter: FindOneFilter): User
     }
 `

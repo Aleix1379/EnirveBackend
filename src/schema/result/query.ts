@@ -1,4 +1,3 @@
-import { sequelize } from '../../db/database'
 import User from '../../models/User'
 import IrregularVerb from '../../models/IrregularVerb'
 import { UserResult, UserResultResponse } from 'results'

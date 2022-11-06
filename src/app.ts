@@ -1,18 +1,14 @@
 import 'dotenv/config'
 import express from 'express'
 import * as db from './db/database'
-import * as helper from './db/helper'
 import { ApolloServer } from 'apollo-server-express'
 import { typeDefs } from './schema/typeDefs'
 import { resolvers } from './schema/resolvers'
 import jwt from 'jwt-simple'
 import User from './models/User'
 
-db.connect()
-  .then(() => {
-    helper.initDatabase().catch(error => console.error(error))
-  })
-  .catch(error => console.error(error))
+db.connect().catch(error => console.error(error))
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,

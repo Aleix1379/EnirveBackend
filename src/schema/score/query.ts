@@ -44,14 +44,11 @@ const getPointsByDates = (values: Array<any>) => {
 export const ScoreQuery = {
   points: async (root: any, params: any, ctx: any) => {
     if (ctx.user) {
-      console.info('ctx.user:', ctx.user)
       const score = await Score.findAll({
         where: { user_id: ctx.user.id }
       })
 
-      const points = getPointsByDates(score)
-      console.info('points:', points)
-      return points
+      return getPointsByDates(score)
     }
   },
   ranking: async (root: any, params: RankingParams) => {

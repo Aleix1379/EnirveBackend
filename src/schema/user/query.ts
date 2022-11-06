@@ -5,5 +5,9 @@ export const UserQuery = {
   profile: async (root: any, args: any, ctx: any) => {
     const user: Profile = ctx.user
     return User.findOne({ where: { id: user.id } })
+  },
+  findOne: async (root: any, args: any, ctx: any) => {
+    const { filter } = args
+    return User.findOne({ where: filter })
   }
 }
