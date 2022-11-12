@@ -25,6 +25,6 @@ export const ResultTypes = `
         updateUserResults (userId: Int!, results: [VerbInput]): Boolean!
     }
     type Query {
-        userResults(userId: Int!): [Result]
+        userResults(userId: Int): [Result]
     }
 `

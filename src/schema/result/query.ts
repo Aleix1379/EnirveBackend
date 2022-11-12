@@ -3,11 +3,25 @@ import IrregularVerb from '../../models/IrregularVerb'
 import { UserResult, UserResultResponse } from 'results'
 
 interface ResultParams {
-  userId: number
+  userId?: number
 }
 
 export const ResultQuery = {
   userResults: async (root: any, { userId }: ResultParams) => {
+    if (!userId) {
+      const data = await IrregularVerb.findAll()
+
+      return data.map((verb: IrregularVerb) => {
+        return {
+          verb: {
+            id: verb.getDataValue('id'),
+            present: verb.getDataValue('present')
+          },
+          completed: false
+        }
+      })
+    }
+
     const user: User = await User.findOne({ where: { id: userId } })
     const verbs = await IrregularVerb.findAll()
 
