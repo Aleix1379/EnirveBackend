@@ -35,7 +35,7 @@ export const ExerciseQuery = {
         .sort(() => Math.random() - 0.5)
         .slice(0, numberOfQuestions)
 
-      let exercises = await Exercise.findAll({
+      let exercises: Array<Exercise> = await Exercise.findAll({
         attributes: ['id', 'sentence', 'help', 'level', 'answers'],
         where: {
           id: randomIds
@@ -45,10 +45,8 @@ export const ExerciseQuery = {
 
       exercises = exercises.map((exercise: Exercise) => {
         const answers = shuffleArray(exercise.getDataValue('answers'))
-        return {
-          ...exercise.dataValues,
-          answers
-        }
+        exercise.setDataValue('answers', answers)
+        return exercise
       })
 
       // return exercises in the same order as randomIds
