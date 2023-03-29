@@ -51,7 +51,7 @@ export const ExerciseQuery = {
 
       // return exercises in the same order as randomIds
       exercises = randomIds.map(id => {
-        return exercises.find(exercise => exercise.id === id)
+        return exercises.find(exercise => exercise.getDataValue('id') === id)
       })
 
       return exercises
