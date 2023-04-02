@@ -11,7 +11,7 @@ Exercise.init(
     },
     help: { type: DataTypes.TEXT },
     level: { type: DataTypes.STRING },
-    sentence: { type: DataTypes.STRING },
+    words: { type: DataTypes.JSON },
     answers: { type: DataTypes.JSON }
   },
   { sequelize, modelName: 'exercise' }
