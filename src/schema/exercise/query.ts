@@ -59,5 +59,16 @@ export const ExerciseQuery = {
       console.error(error)
       throw new Error('An error occurred while fetching exercises')
     }
+  },
+  exercisesList: async () => {
+    try {
+      return await Exercise.findAll({
+        attributes: ['id', 'help', 'level', 'sentence', 'answers'],
+        order: [['id', 'ASC']]
+      })
+    } catch (error) {
+      console.error(error)
+      throw new Error('An error occurred while fetching exercises')
+    }
   }
 }

@@ -15,5 +15,6 @@ export const ExerciseTypes = `
     
     type Query {
         exercises (levels: [String], numberOfQuestions: Int): [Exercise]
+        exercisesList: [Exercise]
     }        
 `
