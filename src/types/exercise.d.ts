@@ -1,13 +1,19 @@
-export interface Answer {
-  id: number
+interface Answer {
+  uuid: string
   text: string
-  position: number
+  position: number | null
 }
 
-export interface Exercise {
-  id: number
+interface Exercise {
+  id?: string
   help: string
-  level: 'beginner' | 'intermediate'
-  sentence: string
+  level: string
   answers: Array<Answer>
+  words: Array<Word>
+}
+
+interface Word {
+  text: string
+  type: 'text' | 'response'
+  answer: Answer | null
 }

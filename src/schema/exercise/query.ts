@@ -36,7 +36,7 @@ export const ExerciseQuery = {
         .slice(0, numberOfQuestions)
 
       let exercises: Array<Exercise> = await Exercise.findAll({
-        attributes: ['id', 'sentence', 'help', 'level', 'answers'],
+        attributes: ['id', 'words', 'help', 'level', 'answers'],
         where: {
           id: randomIds
         },
@@ -63,7 +63,7 @@ export const ExerciseQuery = {
   exercisesList: async () => {
     try {
       return await Exercise.findAll({
-        attributes: ['id', 'help', 'level', 'sentence', 'answers'],
+        attributes: ['id', 'help', 'level', 'words', 'answers'],
         order: [['id', 'ASC']]
       })
     } catch (error) {

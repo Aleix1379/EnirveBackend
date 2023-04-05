@@ -1,17 +1,23 @@
 export const ExerciseTypes = `
     type Exercise {
       id: ID!
-      sentence: String!
+      words: [Word]
       answers: [Answer]!
       help: String
       level: String
     }
     
     type Answer {
-      id: ID!
-      text: String!
-      position: Int
+        uuid: ID!
+        text: String!
+        position: Int
     }
+    
+    type Word {
+        text: String!
+        type: String!
+        answer: Answer
+    }    
     
     type Query {
         exercises (levels: [String], numberOfQuestions: Int): [Exercise]
