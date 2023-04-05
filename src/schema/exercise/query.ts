@@ -1,5 +1,4 @@
 import Exercise from '../../models/Exercise'
-import { Answer } from 'exercise'
 
 interface ExerciseParams {
   levels: Array<'beginner' | 'intermediate'>
