@@ -1,7 +1,7 @@
 import Exercise from '../../models/Exercise'
 
 interface ExerciseParams {
-  levels: Array<'beginner' | 'intermediate'>
+  levels: Array<'easy' | 'medium'>
   numberOfQuestions: number
 }
 
