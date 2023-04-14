@@ -1,4 +1,5 @@
 import Exercise from '../../models/Exercise'
+import { Sequelize } from 'sequelize'
 
 interface ExerciseParams {
   level: 'easy' | 'medium' | 'hard'
@@ -70,6 +71,24 @@ export const ExerciseQuery = {
     } catch (error) {
       console.error(error)
       throw new Error('An error occurred while fetching exercises')
+    }
+  },
+  exerciseTemplate: async (): Promise<Array<ExerciseTemplate>> => {
+    try {
+      return (
+        await Exercise.findAll({
+          attributes: ['level', [Sequelize.fn('count', '*'), 'count']],
+          group: ['level']
+        })
+      ).map((exercise: Exercise) => {
+        return {
+          level: exercise.getDataValue('level'),
+          quantity: exercise.getDataValue('count')
+        }
+      })
+    } catch (error) {
+      console.error(error)
+      throw new Error('An error occurred while fetching exercise template')
     }
   }
 }

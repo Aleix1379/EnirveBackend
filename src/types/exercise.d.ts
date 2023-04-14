@@ -17,3 +17,8 @@ interface Word {
   type: 'text' | 'response'
   answer: Answer | null
 }
+
+interface ExerciseTemplate {
+  level: 'easy' | 'medium' | 'hard'
+  quantity: number
+}

@@ -19,8 +19,14 @@ export const ExerciseTypes = `
         answer: Answer
     }    
     
+    type ExerciseTemplate {
+        level: String
+        quantity: Int
+    }
+    
     type Query {
         exercises (level: String, numberOfQuestions: Int): [Exercise]
         exercisesList: [Exercise]
+        exerciseTemplate: [ExerciseTemplate]
     }        
 `
