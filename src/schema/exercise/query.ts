@@ -1,7 +1,7 @@
 import Exercise from '../../models/Exercise'
 
 interface ExerciseParams {
-  levels: Array<'easy' | 'medium'>
+  level: 'easy' | 'medium' | 'hard'
   numberOfQuestions: number
 }
 
@@ -16,15 +16,15 @@ const shuffleArray = (array: Array<Answer>): Array<Answer> => {
 export const ExerciseQuery = {
   exercises: async (
     root: any,
-    { levels, numberOfQuestions }: ExerciseParams
+    { level, numberOfQuestions }: ExerciseParams
   ) => {
     try {
-      console.info('levels', levels)
+      console.info('level', level)
       console.info('numberOfQuestions', numberOfQuestions)
       const ids = await Exercise.findAll({
         attributes: ['id'],
         where: {
-          level: levels
+          level: level
         }
       }).then((exercises: Exercise[]) => {
         return exercises.map(exercise => exercise.getDataValue('id'))
@@ -50,7 +50,9 @@ export const ExerciseQuery = {
 
       // return exercises in the same order as randomIds
       exercises = randomIds.map(id => {
-        return exercises.find(exercise => exercise.getDataValue('id') === id)
+        return exercises
+          .find(exercise => exercise.getDataValue('id') === id)
+          .toJSON()
       })
 
       return exercises
