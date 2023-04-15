@@ -6,7 +6,7 @@ interface AddPointsParams {
 
 export const ScoreMutation = {
   addPoints: async (root: any, { points }: AddPointsParams, ctx: any) => {
-    if (ctx.user) {
+    if (!ctx.user) {
       throw new Error('Not authenticated')
     }
     await Score.create({
