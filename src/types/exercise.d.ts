@@ -22,3 +22,8 @@ interface ExerciseTemplate {
   level: 'easy' | 'medium' | 'hard'
   quantity: number
 }
+
+interface exercisesList {
+  level: 'easy' | 'medium' | 'hard'
+  count: number
+}

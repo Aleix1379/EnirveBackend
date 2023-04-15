@@ -8,5 +8,6 @@ export interface Points {
   day: number
   week: number
   month: number
+  year: number
   total: number
 }

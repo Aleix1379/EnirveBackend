@@ -1,6 +1,14 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../db/database'
-export default class IrregularVerb extends Model {}
+export default class IrregularVerb extends Model {
+  public id!: number
+  public present!: string
+  public simple!: string
+  public participle!: string
+  public readonly createdAt!: Date
+  public readonly updatedAt!: Date
+}
+
 IrregularVerb.init(
   {
     id: {

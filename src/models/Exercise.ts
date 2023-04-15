@@ -1,7 +1,16 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../db/database'
 
-export default class Exercise extends Model {}
+export default class Exercise extends Model {
+  public id!: number
+  public help!: string
+  public level!: string
+  public words!: Array<Word>
+  public answers!: Array<Answer>
+
+  public readonly createdAt!: Date
+  public readonly updatedAt!: Date
+}
 Exercise.init(
   {
     id: {

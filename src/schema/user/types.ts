@@ -3,7 +3,10 @@ export const UserTypes = `
         id: Int!
         username: String!
         email: String!
-        password: String!
+        avatar: String!
+    }
+    type FindOneResponse {
+        username: String!
         avatar: String!
     }
     type SignResponse {
@@ -27,6 +30,6 @@ export const UserTypes = `
     }
     type Query {
         profile : User!
-        findOne (filter: FindOneFilter): User
+        findOne (filter: FindOneFilter): FindOneResponse
     }
 `

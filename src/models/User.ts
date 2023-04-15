@@ -1,6 +1,16 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../db/database'
-export default class User extends Model {}
+export default class User extends Model {
+  public id!: number
+  public username!: string
+  public email!: string
+  public password!: string
+  public avatar!: string
+  public results!: Array<any>
+  public readonly createdAt!: Date
+  public readonly updatedAt!: Date
+}
+
 User.init(
   {
     id: {

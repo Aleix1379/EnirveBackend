@@ -1,7 +1,14 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../db/database'
 import User from './User'
-export default class Score extends Model {}
+export default class Score extends Model {
+  public id!: number
+  public points!: number
+  public user_id!: number
+  public readonly createdAt!: Date
+  public readonly updatedAt!: Date
+}
+
 Score.init(
   {
     id: {

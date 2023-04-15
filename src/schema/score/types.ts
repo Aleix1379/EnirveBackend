@@ -3,6 +3,7 @@ export const ScoreTypes = `
         day: Int!
         week: Int!
         month: Int!
+        year: Int!
         total: Int!
     }
     type RankingItem {

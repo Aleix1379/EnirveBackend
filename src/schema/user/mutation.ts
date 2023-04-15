@@ -77,7 +77,7 @@ export const UserMutation = {
     if (!user || !password) {
       throw new Error('You have entered an invalid username or password')
     }
-    const result = await bcrypt.compare(password, user.getDataValue('password'))
+    const result = await bcrypt.compare(password, user.password)
     if (!result) {
       throw new Error('You have entered an invalid username or password')
     }
@@ -102,6 +102,10 @@ export const UserMutation = {
     { avatar }: UpdateUserAvatarParams,
     ctx: any
   ): Promise<UpdateUserAvatarResponse> => {
+    if (!ctx.user) {
+      throw new Error('Not authenticated')
+    }
+
     const user: User = await User.findOne({ where: { id: ctx.user.id } })
     user.setDataValue('avatar', avatar)
     await user.save()
@@ -134,6 +138,10 @@ export const UserMutation = {
     { username, email }: UpdateUserParams,
     ctx: any
   ) => {
+    if (!ctx.user) {
+      throw new Error('Not authenticated')
+    }
+
     const user: User = await User.findOne({ where: { id: ctx.user.id } })
     user.setDataValue('username', username)
     user.setDataValue('email', email)

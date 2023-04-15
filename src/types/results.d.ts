@@ -1,8 +1,8 @@
 interface VerbResult {
   id: number
   present: string
-  simple: string
-  participle: string
+  simple?: string
+  participle?: string
 }
 export interface UserResult {
   verbId: number

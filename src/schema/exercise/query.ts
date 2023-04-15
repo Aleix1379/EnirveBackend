@@ -20,15 +20,13 @@ export const ExerciseQuery = {
     { level, numberOfQuestions }: ExerciseParams
   ) => {
     try {
-      console.info('level', level)
-      console.info('numberOfQuestions', numberOfQuestions)
       const ids = await Exercise.findAll({
         attributes: ['id'],
         where: {
           level: level
         }
       }).then((exercises: Exercise[]) => {
-        return exercises.map(exercise => exercise.getDataValue('id'))
+        return exercises.map(exercise => exercise.id)
       })
 
       const randomIds = ids
@@ -44,17 +42,15 @@ export const ExerciseQuery = {
       })
 
       exercises = exercises.map((exercise: Exercise) => {
-        const answers = shuffleArray(exercise.getDataValue('answers'))
+        const answers = shuffleArray(exercise.answers)
         exercise.setDataValue('answers', answers)
         return exercise
       })
 
       // return exercises in the same order as randomIds
-      exercises = randomIds.map(id => {
-        return exercises
-          .find(exercise => exercise.getDataValue('id') === id)
-          .toJSON()
-      })
+      exercises = randomIds.map(id =>
+        exercises.find(exercise => exercise.id === id).toJSON()
+      )
 
       return exercises
     } catch (error) {

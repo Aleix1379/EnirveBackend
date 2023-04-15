@@ -12,11 +12,12 @@ interface RankingParams {
   limit?: number
 }
 
-const getPointsByDates = (values: Array<any>) => {
+const getPointsByDates = (values: Array<Score>) => {
   const points: Points = {
     day: 0,
     week: 0,
     month: 0,
+    year: 0,
     total: 0
   }
   points.day = values
@@ -37,19 +38,27 @@ const getPointsByDates = (values: Array<any>) => {
     )
     .map(item => item.points)
     .reduce((a, b) => a + b, 0)
+  points.year = values
+    .filter(
+      v => dayjs(Number(v.createdAt)).unix() >= dayjs().subtract(1, 'y').unix()
+    )
+    .map(item => item.points)
+    .reduce((a, b) => a + b, 0)
   points.total = values.map(item => item.points).reduce((a, b) => a + b, 0)
   return points
 }
 
 export const ScoreQuery = {
   points: async (root: any, params: any, ctx: any) => {
-    if (ctx.user) {
-      const score = await Score.findAll({
-        where: { user_id: ctx.user.id }
-      })
-
-      return getPointsByDates(score)
+    if (!ctx.user) {
+      throw new Error('Not authenticated')
     }
+
+    const score = await Score.findAll({
+      where: { user_id: ctx.user.id }
+    })
+
+    return getPointsByDates(score)
   },
   ranking: async (root: any, params: RankingParams) => {
     const start = params.start ?? RANKING_DEFAULT_START
