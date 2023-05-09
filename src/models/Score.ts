@@ -26,5 +26,6 @@ Score.init(
 Score.belongsTo(User, {
   as: 'user',
   targetKey: 'id',
-  foreignKey: { name: 'user_id' }
+  foreignKey: { name: 'user_id' },
+  onDelete: 'cascade'
 })

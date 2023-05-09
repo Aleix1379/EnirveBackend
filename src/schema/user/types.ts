@@ -22,7 +22,8 @@ export const UserTypes = `
         registerUser (username: String!, email: String!, password: String!): SignResponse
         updateUserAvatar (avatar: String!): User!
         verifyTokenWithGoogle (token: String!): SignResponse!
-        updateProfile ( username: String! email: String!): User!
+        updateProfile (username: String! email: String!): User!
+        removeAccount: Boolean!
     }
     input FindOneFilter {
         username: String

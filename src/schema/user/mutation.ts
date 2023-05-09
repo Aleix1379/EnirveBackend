@@ -147,5 +147,14 @@ export const UserMutation = {
     user.setDataValue('email', email)
     await user.save()
     return user.toJSON()
+  },
+  removeAccount: async (root: any, args: any, ctx: any): Promise<boolean> => {
+    if (!ctx.user) {
+      throw new Error('Not authenticated')
+    }
+
+    const user: User = await User.findOne({ where: { id: ctx.user.id } })
+    await user.destroy()
+    return true
   }
 }
