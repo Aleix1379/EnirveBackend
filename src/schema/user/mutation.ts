@@ -6,6 +6,8 @@ import { Verb } from 'verb'
 import { Profile } from 'profile'
 import { OAuth2Client } from 'google-auth-library'
 import { UserResult } from 'results'
+import crypto from 'crypto'
+import appleSigninAuth from 'apple-signin-auth'
 
 const GOOGLE_CLIENT_ID =
   '21474542388-1mi2ieimerkjhur2uu2a85j36ri67mcn.apps.googleusercontent.com'
@@ -41,8 +43,15 @@ interface UpdateUserAvatarResponse {
   user: Profile
 }
 
-interface verifyTokenWithGoogleParams {
+interface VerifyTokenWithParams {
   token: string
+  nonce?: string
+  username?: string
+}
+
+interface VerifyWithTokenResponse {
+  jwt: string
+  user: Profile
 }
 
 const saltRounds = 10
@@ -113,9 +122,9 @@ export const UserMutation = {
   },
   verifyTokenWithGoogle: async (
     root: any,
-    { token }: verifyTokenWithGoogleParams,
+    { token }: VerifyTokenWithParams,
     ctx: any
-  ): Promise<any> => {
+  ): Promise<VerifyWithTokenResponse> => {
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: GOOGLE_CLIENT_ID
@@ -129,7 +138,7 @@ export const UserMutation = {
     }
 
     return {
-      user,
+      user: user.toJSON(),
       jwt: jwt.encode({ email: payload.email }, process.env.JWT_SECRET)
     }
   },
@@ -137,7 +146,7 @@ export const UserMutation = {
     root: any,
     { username, email }: UpdateUserParams,
     ctx: any
-  ) => {
+  ): Promise<VerifyWithTokenResponse> => {
     if (!ctx.user) {
       throw new Error('Not authenticated')
     }
@@ -147,6 +156,34 @@ export const UserMutation = {
     user.setDataValue('email', email)
     await user.save()
     return user.toJSON()
+  },
+  verifyTokenWithApple: async (
+    root: any,
+    { token, nonce, username }: VerifyTokenWithParams,
+    ctx: any
+  ): Promise<VerifyWithTokenResponse> => {
+    const appleIdTokenClaims = await appleSigninAuth.verifyIdToken(token, {
+      /** sha256 hex hash of raw nonce */
+      nonce: nonce
+        ? crypto.createHash('sha256').update(nonce).digest('hex')
+        : undefined
+    })
+
+    let user = await User.findOne({
+      where: { email: appleIdTokenClaims.email }
+    })
+
+    if (!user) {
+      user = await createUSer(username, appleIdTokenClaims.email, '')
+    }
+
+    return {
+      user: user.toJSON(),
+      jwt: jwt.encode(
+        { email: appleIdTokenClaims.email },
+        process.env.JWT_SECRET
+      )
+    }
   },
   removeAccount: async (root: any, args: any, ctx: any): Promise<boolean> => {
     if (!ctx.user) {
