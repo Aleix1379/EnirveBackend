@@ -173,6 +173,11 @@ export const UserMutation = {
       where: { email: appleIdTokenClaims.email }
     })
 
+    if (!username) {
+      const emailParts = appleIdTokenClaims.email.split('@')
+      username = emailParts[0]
+    }
+
     if (!user) {
       user = await createUSer(username, appleIdTokenClaims.email, '')
     }
