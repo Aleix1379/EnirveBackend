@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import express from 'express'
-import cors from 'cors' // import cors
+import cors from 'cors'
 import bodyParser from 'body-parser'
 import * as db from './db/database'
 import { ApolloServer } from 'apollo-server-express'
@@ -9,6 +9,8 @@ import { resolvers } from './schema/resolvers'
 import jwt from 'jwt-simple'
 import User from './models/User'
 import { sendMail } from './mail/mail'
+import https from 'https' // Import https module
+import fs from 'fs' // Import fs module
 
 db.connect().catch(error => console.error(error))
 
@@ -39,12 +41,12 @@ const server = new ApolloServer({
     }
   }
 })
+
 const app = express()
 
-app.use(cors()) // add cors middleware
+app.use(cors())
 app.use(bodyParser.json())
 
-// set up endpoint for contact form /api/contact
 app.post('/contact', async (req, res) => {
   try {
     const { name, email, message } = req.body
@@ -59,10 +61,17 @@ app.post('/contact', async (req, res) => {
 server
   .start()
   .then(() => {
-    server.applyMiddleware({ app, path: '/' }) // remove cors options here
-    app.listen({ port: process.env.PORT || 4000 }, () =>
+    server.applyMiddleware({ app, path: '/' })
+
+    // Create HTTPS server
+    const httpsServer = https.createServer({
+      key: fs.readFileSync('/etc/letsencrypt/live/aleixmp.dev/privkey.pem'),
+      cert: fs.readFileSync('/etc/letsencrypt/live/aleixmp.dev/fullchain.pem')
+    }, app)
+
+    httpsServer.listen({ port: process.env.PORT || 4000 }, () =>
       console.log(
-        `🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`
+        `🚀 Server ready at https://localhost:${process.env.PORT}${server.graphqlPath}`
       )
     )
   })
